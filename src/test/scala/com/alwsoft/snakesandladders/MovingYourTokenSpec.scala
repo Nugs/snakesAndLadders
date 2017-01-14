@@ -1,8 +1,19 @@
 package com.alwsoft.snakesandladders
 
-import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
+import org.mockito.Mockito._
+import org.scalatest.mockito.MockitoSugar
+import org.scalatest.{BeforeAndAfterEach, FeatureSpec, GivenWhenThen, Matchers}
 
-class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers {
+class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers with MockitoSugar with BeforeAndAfterEach {
+
+  private val mockDice = mock[Dice]
+  private var game: SnakesAndLadders = SnakesAndLadders(mockDice)
+
+  override def beforeEach: Unit = {
+    game = SnakesAndLadders(mockDice)
+    reset(mockDice)
+  }
+
   feature("Moving your token") {
     info("As a player")
     info("I want to be able to move my token")
@@ -10,8 +21,6 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
     scenario("1") {
       Given("the game is started")
-      val game = SnakesAndLadders()
-
       When("the token is placed on the board")
       val token1 = game.addPlayer("Player1")
 
@@ -21,11 +30,12 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
     scenario("2") {
       Given("the token is on square 1")
-      val game = SnakesAndLadders()
       val token1 = game.addPlayer("Player1")
+      game.location(token1) shouldBe 1
 
       When("the token is moved 3 spaces")
-      game.move(token1, 3)
+      when(mockDice.roll()).thenReturn(3)
+      game.move(token1)
 
       Then("the token is on square 4")
       game.location(token1) shouldBe 4
@@ -33,14 +43,16 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
     scenario("3") {
       Given("the token is on square 1")
-      val game = SnakesAndLadders()
       val token1 = game.addPlayer("Player1")
+      game.location(token1) shouldBe 1
 
       When("the token is moved 3 spaces")
-      game.move(token1, 3)
+      when(mockDice.roll()).thenReturn(3)
+      game.move(token1)
 
       And("it is moved 4 spaces")
-      game.move(token1, 4)
+      when(mockDice.roll()).thenReturn(4)
+      game.move(token1)
 
       Then("the token is on square 8")
       game.location(token1) shouldBe 8
@@ -54,7 +66,6 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
     scenario("1") {
       Given("the game is started")
-      val game = SnakesAndLadders()
       val token1 = game.addPlayer("Player1")
 
       When("the player rolls a die")
@@ -66,10 +77,16 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers {
     }
     
     scenario("2") {
+      val token1 = game.addPlayer("Player1")
+
       Given("the player rolls a 4")
+      when(mockDice.roll()) thenReturn 4
+
       When("they move their token")
+      game.move(token1)
+
       Then("the token should move 4 spaces")
-      pending
+      game.location(token1) shouldBe 5
     }
   }
 }
