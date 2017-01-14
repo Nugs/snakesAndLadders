@@ -79,5 +79,19 @@ class MultiplePlayersSpec extends FeatureSpec with GivenWhenThen with Matchers w
       Then("it is Player 1's turn")
       game.nextToPlay shouldBe Some(p1)
     }
+
+    scenario("3") {
+      Given("it is Player 2's turn")
+      val p1 = game.addPlayer("player1")
+      val p2 = game.addPlayer("player2")
+      game.move(p1)
+      game.nextToPlay shouldBe Some(p2)
+
+      When("player 1 attempts to move their token")
+      Then("a GameStateException is thrown")
+      a[GameStateException] shouldBe thrownBy {
+        game.move(p1)
+      }
+    }
   }
 }
