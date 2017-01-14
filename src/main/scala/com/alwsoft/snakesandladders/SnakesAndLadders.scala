@@ -3,9 +3,15 @@ package com.alwsoft.snakesandladders
 case class SnakesAndLadders() {
   case class Token(playerName: String)
 
-  def location(token: Token) = 1
+  var tokenLocation: Map[Token, Int] = Map()
 
-  def move(token: Token, distance: Int) = ???
+  def location(token: Token): Int = tokenLocation.getOrElse(token, -1)
 
-  def addPlayer(name: String) = Token(name)
+  def move(token: Token, distance: Int): Unit = tokenLocation += (token -> (distance + 1))
+
+  def addPlayer(name: String): Token = {
+    val newPlayer = Token(name)
+    move(newPlayer, 0)
+    newPlayer
+  }
 }
