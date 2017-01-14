@@ -14,14 +14,21 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
   var tokenLocation: Map[Token, Int] = Map()
   var fixtures: Map[Int, Int] = Map()
 
+  def gameIsStarted: Boolean = tokenLocation.nonEmpty
+
   def addLadder(ladder: (Int, Int)):Unit = {
-    if(ladder._1 > ladder._2) throw new BoardFixtureException("Ladders must go down")
-    fixtures += ladder
+    if(ladder._1 > ladder._2) throw BoardFixtureException("Ladders must go down")
+    addFixture(ladder)
   }
 
   def addSnake(snake: (Int, Int)): Unit = {
-    if(snake._1 < snake._2) throw new BoardFixtureException("Snakes must go down")
-    fixtures += snake
+    if(snake._1 < snake._2) throw BoardFixtureException("Snakes must go down")
+    addFixture(snake)
+  }
+
+  private def addFixture(fixture: (Int, Int)): Unit = {
+    if(gameIsStarted) throw GameStateException("Cannot modify board once game has started")
+    else fixtures += fixture
   }
 
   def playerOnWinningSquare: ((Token, Int)) => Boolean = entry => entry._2 == boardSize
