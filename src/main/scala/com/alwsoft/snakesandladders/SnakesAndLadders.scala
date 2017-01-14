@@ -11,6 +11,7 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
   var tokenLocation: Map[Token, Int] = Map()
   var snakes: Map[Int, Int] = Map()
 
+  def addLadder(ladder: (Int, Int)):Unit = ()
   def addSnake(snake: (Int, Int)): Unit = snakes += snake
 
   def playerOnWinningSquare: ((Token, Int)) => Boolean = entry => entry._2 == boardSize

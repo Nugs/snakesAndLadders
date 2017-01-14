@@ -45,4 +45,30 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen with Matchers 
       game.location(token1) shouldBe 2
     }
   }
+
+  feature("Ladders Go Up, Not Down") {
+    info("As a player")
+    info("I want ladders to move my token up")
+    info("So that the game is more fun")
+
+    scenario("1") {
+      Given("there is a ladder connecting squares 2 and 12")
+      game.addLadder(2 -> 12)
+
+      When("the token lands on square 2")
+      val token1 = game.addPlayer("Player1")
+      when(mockDice.roll()).thenReturn(1)
+      game.move(token1)
+
+      Then("the token is on square 12")
+      game.location(token1) shouldBe 12
+    }
+
+    scenario("2") {
+      Given("there is a ladder connecting squares 2 and 12")
+      When("the token lands on square 12")
+      Then("the token is on square 12")
+      pending
+    }
+  }
 }
