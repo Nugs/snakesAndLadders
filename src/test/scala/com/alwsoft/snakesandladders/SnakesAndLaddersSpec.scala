@@ -76,5 +76,28 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen with Matchers 
       Then("the token is on square 12")
       game.location(token1) shouldBe 12
     }
+
+    scenario("3") {
+      When("trying to create a snake in the wrong direction")
+      Then("a runtime exception is thrown")
+      a[BoardFixtureException] shouldBe thrownBy {
+        game.addSnake(2 -> 12)
+      }
+    }
+
+    scenario("4") {
+      When("trying to create a ladder in the wrong direction")
+      Then("a runtime exception is thrown")
+      a[BoardFixtureException] shouldBe thrownBy {
+        game.addLadder(12 -> 2)
+      }
+    }
+
+    scenario("5") {
+      Given("A game has started")
+      When("trying to add 'fixtures' to the board")
+      Then("a runtime exception is thrown")
+      pending
+    }
   }
 }

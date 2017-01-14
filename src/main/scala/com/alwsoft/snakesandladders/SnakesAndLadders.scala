@@ -2,6 +2,8 @@ package com.alwsoft.snakesandladders
 
 import scala.util.Random
 
+case class BoardFixtureException(message: String) extends RuntimeException(message)
+
 case class Token(playerName: String)
 case class Dice(maxValue: Int) {
   def roll():Int = Random.nextInt(maxValue) + 1
@@ -11,8 +13,15 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
   var tokenLocation: Map[Token, Int] = Map()
   var fixtures: Map[Int, Int] = Map()
 
-  def addLadder(ladder: (Int, Int)):Unit = fixtures += ladder
-  def addSnake(snake: (Int, Int)): Unit = fixtures += snake
+  def addLadder(ladder: (Int, Int)):Unit = {
+    if(ladder._1 > ladder._2) throw new BoardFixtureException("Ladders must go down")
+    fixtures += ladder
+  }
+
+  def addSnake(snake: (Int, Int)): Unit = {
+    if(snake._1 < snake._2) throw new BoardFixtureException("Snakes must go down")
+    fixtures += snake
+  }
 
   def playerOnWinningSquare: ((Token, Int)) => Boolean = entry => entry._2 == boardSize
 
