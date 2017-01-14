@@ -7,8 +7,8 @@ case class Dice(maxValue: Int) {
   def roll():Int = Random.nextInt(maxValue) + 1
 }
 
-case class SnakesAndLadders(dice: Dice = Dice(6)) {
-  def playerOnWinningSquare: ((Token, Int)) => Boolean = entry => entry._2 == 100
+case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
+  def playerOnWinningSquare: ((Token, Int)) => Boolean = entry => entry._2 == boardSize
 
   def winner(): Option[Token] = tokenLocation.find(playerOnWinningSquare).map(_._1)
 
@@ -16,7 +16,13 @@ case class SnakesAndLadders(dice: Dice = Dice(6)) {
 
   def location(token: Token): Int = tokenLocation.getOrElse(token, -1)
 
-  def move(token: Token): Unit = tokenLocation += (token -> (dice.roll() + location(token)))
+  def move(token: Token): Unit = {
+    dice.roll() match {
+      // If the roll would take you beyond the end of the board, don't do anything
+      case roll if roll + location(token) > boardSize => ()
+      case roll => tokenLocation += (token -> (roll + location(token)))
+    }
+  }
 
   def addPlayer(name: String): Token = {
     val newPlayer = Token(name)
