@@ -46,4 +46,24 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers {
       game.location(token1) shouldBe 8
     }
   }
+
+  feature("Player Can Win the Game") {
+    info("As a player")
+    info("I want to move my token based on the roll of a die")
+    info("So that there is an element of chance in the game")
+
+    scenario("1") {
+      Given("the game is started")
+      When("the player rolls a die")
+      Then("the result should be between 1-6 inclusive")
+      pending
+    }
+    
+    scenario("2") {
+      Given("the player rolls a 4")
+      When("they move their token")
+      Then("the token should move 4 spaces")
+      pending
+    }
+  }
 }
