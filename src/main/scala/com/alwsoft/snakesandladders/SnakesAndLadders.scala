@@ -8,7 +8,9 @@ case class Dice(maxValue: Int) {
 }
 
 case class SnakesAndLadders(dice: Dice = Dice(6)) {
-  def winner(): Token = ???
+  def playerOnWinningSquare: ((Token, Int)) => Boolean = entry => entry._2 == 100
+
+  def winner(): Option[Token] = tokenLocation.find(playerOnWinningSquare).map(_._1)
 
   var tokenLocation: Map[Token, Int] = Map()
 
