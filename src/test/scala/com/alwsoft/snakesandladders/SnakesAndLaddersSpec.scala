@@ -95,9 +95,13 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen with Matchers 
 
     scenario("5") {
       Given("A game has started")
+      game.addPlayer("Player 1")
+
       When("trying to add 'fixtures' to the board")
       Then("a runtime exception is thrown")
-      pending
+      a[GameStateException] shouldBe thrownBy {
+        game.addLadder(2 -> 12)
+      }
     }
   }
 }

@@ -3,6 +3,7 @@ package com.alwsoft.snakesandladders
 import scala.util.Random
 
 case class BoardFixtureException(message: String) extends RuntimeException(message)
+case class GameStateException(message: String) extends RuntimeException(message)
 
 case class Token(playerName: String)
 case class Dice(maxValue: Int) {
