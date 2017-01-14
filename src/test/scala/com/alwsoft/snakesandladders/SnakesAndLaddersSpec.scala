@@ -21,9 +21,15 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen with Matchers 
 
     scenario("1") {
       Given("there is a snake connecting squares 2 and 12")
+      game.addSnake(12 -> 2)
+
       When("the token lands on square 12")
+      val token1 = game.addPlayer("Player1")
+      when(mockDice.roll()).thenReturn(11)
+      game.move(token1)
+
       Then("the token is on square 2")
-      pending
+      game.location(token1) shouldBe 2
     }
 
     scenario("2") {
