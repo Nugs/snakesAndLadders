@@ -9,8 +9,9 @@ case class Dice(maxValue: Int) {
 
 case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
   var tokenLocation: Map[Token, Int] = Map()
+  var snakes: Map[Int, Int] = Map()
 
-  def addSnake(tuple: (Int, Int)) = ???
+  def addSnake(snake: (Int, Int)): Unit = snakes += snake
 
   def playerOnWinningSquare: ((Token, Int)) => Boolean = entry => entry._2 == boardSize
 
@@ -19,10 +20,14 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
   def location(token: Token): Int = tokenLocation.getOrElse(token, -1)
 
   def move(token: Token): Unit = {
-    dice.roll() match {
-      // If the roll would take you beyond the end of the board, don't do anything
-      case roll if roll + location(token) > boardSize => ()
-      case roll => tokenLocation += (token -> (roll + location(token)))
+    tokenLocation += {
+      dice.roll() + location(token) match {
+        // If the roll would take you beyond the end of the board, don't do anything
+        case newLocation if newLocation > boardSize => token -> location(token)
+        // If there is a snake head at the location you arrive on, go to the tail end
+        case newLocation if snakes.isDefinedAt(newLocation) => token -> snakes(newLocation)
+        case newLocation => token -> newLocation
+      }
     }
   }
 
