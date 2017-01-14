@@ -5,14 +5,29 @@ import scala.util.Random
 case class BoardFixtureException(message: String) extends RuntimeException(message)
 case class GameStateException(message: String) extends RuntimeException(message)
 
-case class Token(playerName: String)
+case class Token(playerName: String, var moveCount: Int = 0)
+
 case class Dice(maxValue: Int) {
   def roll():Int = Random.nextInt(maxValue) + 1
 }
 
 case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
-  var tokenLocation: Map[Token, Int] = Map()
-  var fixtures: Map[Int, Int] = Map()
+
+  private var players: Seq[Token] = Seq()
+  private var tokenLocation: Map[Token, Int] = Map()
+  private var fixtures: Map[Int, Int] = Map()
+  private def playerOnWinningSquare: ((Token, Int)) => Boolean = entry => entry._2 == boardSize
+
+  private def addFixture(fixture: (Int, Int)): Unit = {
+    if(gameIsStarted)
+      throw GameStateException("Cannot modify board once game has started")
+    else if(fixtures.exists(e => e._1 == fixture._1 || e._2 == fixture._1))
+      throw BoardFixtureException("Fixture cannot start/end on the same square as another")
+    else
+      fixtures += fixture
+  }
+
+  def nextToPlay: Option[Token] = players.sortBy(t => t.moveCount).headOption
 
   def gameIsStarted: Boolean = tokenLocation.nonEmpty
 
@@ -25,17 +40,6 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
     if(snake._1 < snake._2) throw BoardFixtureException("Snakes must go down")
     addFixture(snake)
   }
-
-  private def addFixture(fixture: (Int, Int)): Unit = {
-    if(gameIsStarted)
-      throw GameStateException("Cannot modify board once game has started")
-    else if(fixtures.exists(e => e._1 == fixture._1 || e._2 == fixture._1))
-      throw BoardFixtureException("Fixture cannot start/end on the same square as another")
-    else
-      fixtures += fixture
-  }
-
-  def playerOnWinningSquare: ((Token, Int)) => Boolean = entry => entry._2 == boardSize
 
   def winner(): Option[Token] = tokenLocation.find(playerOnWinningSquare).map(_._1)
 
@@ -51,11 +55,13 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
         case newLocation => token -> newLocation
       }
     }
+    token.moveCount += 1
   }
 
   def addPlayer(name: String): Token = {
     val newPlayer = Token(name)
     tokenLocation += (newPlayer -> 1)
+    players = players :+ newPlayer
     newPlayer
   }
 }
