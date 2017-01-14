@@ -46,6 +46,8 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
   def location(token: Token): Int = tokenLocation.getOrElse(token, -1)
 
   def move(token: Token): Unit = {
+    if(Option(token) != nextToPlay) throw GameStateException(s"Please wait for your turn (next up is $nextToPlay)")
+
     tokenLocation += {
       dice.roll() + location(token) match {
         // If the roll would take you beyond the end of the board, don't do anything
