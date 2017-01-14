@@ -33,10 +33,17 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
     scenario("3") {
       Given("the token is on square 1")
+      val game = SnakesAndLadders()
+      val token1 = game.addPlayer("Player1")
+
       When("the token is moved 3 spaces")
+      game.move(token1, 3)
+
       And("it is moved 4 spaces")
+      game.move(token1, 4)
+
       Then("the token is on square 8")
-      pending
+      game.location(token1) shouldBe 8
     }
   }
 }
