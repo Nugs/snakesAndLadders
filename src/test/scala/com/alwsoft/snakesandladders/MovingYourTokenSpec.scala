@@ -59,7 +59,7 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers w
     }
   }
 
-  feature("Player Can Win the Game") {
+  feature("Moves are determined by dice rolls") {
     info("As a player")
     info("I want to move my token based on the roll of a die")
     info("So that there is an element of chance in the game")
@@ -87,6 +87,28 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers w
 
       Then("the token should move 4 spaces")
       game.location(token1) shouldBe 5
+    }
+  }
+
+  feature("Player can win the game") {
+    info("As a player")
+    info("I want to move my token based on the roll of a die")
+    info("So that there is an element of chance in the game")
+
+    scenario("1") {
+      Given("the token is on square 97")
+      When("the token is moved 3 spaces")
+      Then("the token is on square 100")
+      And("the player has won the game")
+      pending
+    }
+
+    scenario("2") {
+      Given("the token is on square 97")
+      When("the token is moved 4 spaces")
+      Then("the token is on square 97")
+      And("the player has not won the game")
+      pending
     }
   }
 }
