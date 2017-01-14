@@ -54,9 +54,15 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
     scenario("1") {
       Given("the game is started")
+      val game = SnakesAndLadders()
+      val token1 = game.addPlayer("Player1")
+
       When("the player rolls a die")
+      val dice: Dice = Dice(6)
+
       Then("the result should be between 1-6 inclusive")
-      pending
+      val validRolls = 1 to 6
+      (1 to 100).forall(r => validRolls.contains(dice.roll())) shouldBe true
     }
     
     scenario("2") {

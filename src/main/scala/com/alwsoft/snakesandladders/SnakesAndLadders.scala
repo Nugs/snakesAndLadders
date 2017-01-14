@@ -1,7 +1,11 @@
 package com.alwsoft.snakesandladders
 
+case class Token(playerName: String)
+case class Dice(maxValue: Int) {
+  def roll():Int = ???
+}
+
 case class SnakesAndLadders() {
-  case class Token(playerName: String)
 
   var tokenLocation: Map[Token, Int] = Map()
 
