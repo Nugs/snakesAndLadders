@@ -103,5 +103,27 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen with Matchers 
         game.addLadder(2 -> 12)
       }
     }
+
+    scenario("6") {
+      Given("a ladder already exists from 2 -> 12")
+      game.addLadder(2 -> 12)
+
+      When("attempting to add another ladder from 2 -> 22")
+      Then("an exception is thrown")
+      a[BoardFixtureException] shouldBe thrownBy {
+        game.addLadder(2 -> 22)
+      }
+    }
+
+    scenario("7") {
+      Given("a ladder already exists from 2 -> 12")
+      game.addLadder(2 -> 12)
+
+      When("attempting to add a snake from 12 -> 2")
+      Then("an exception is thrown")
+      a[BoardFixtureException] shouldBe thrownBy {
+        game.addSnake(12 -> 2)
+      }
+    }
   }
 }

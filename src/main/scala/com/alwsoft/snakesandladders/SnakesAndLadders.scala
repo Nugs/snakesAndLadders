@@ -27,8 +27,12 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
   }
 
   private def addFixture(fixture: (Int, Int)): Unit = {
-    if(gameIsStarted) throw GameStateException("Cannot modify board once game has started")
-    else fixtures += fixture
+    if(gameIsStarted)
+      throw GameStateException("Cannot modify board once game has started")
+    else if(fixtures.exists(e => e._1 == fixture._1 || e._2 == fixture._1))
+      throw BoardFixtureException("Fixture cannot start/end on the same square as another")
+    else
+      fixtures += fixture
   }
 
   def playerOnWinningSquare: ((Token, Int)) => Boolean = entry => entry._2 == boardSize
