@@ -7,11 +7,11 @@ case class SnakesAndLadders() {
 
   def location(token: Token): Int = tokenLocation.getOrElse(token, -1)
 
-  def move(token: Token, distance: Int): Unit = tokenLocation += (token -> (distance + 1))
+  def move(token: Token, distance: Int): Unit = tokenLocation += (token -> (distance + location(token)))
 
   def addPlayer(name: String): Token = {
     val newPlayer = Token(name)
-    move(newPlayer, 0)
+    tokenLocation += (newPlayer -> 1)
     newPlayer
   }
 }
