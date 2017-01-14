@@ -1,8 +1,10 @@
 package com.alwsoft.snakesandladders
 
+import scala.util.Random
+
 case class Token(playerName: String)
 case class Dice(maxValue: Int) {
-  def roll():Int = ???
+  def roll():Int = Random.nextInt(maxValue) + 1
 }
 
 case class SnakesAndLadders() {
