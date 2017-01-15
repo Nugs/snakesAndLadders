@@ -12,6 +12,7 @@ class MultiplePlayersSpec extends FeatureSpec with GivenWhenThen with Matchers w
   override def beforeEach: Unit = {
     game = SnakesAndLadders(mockDice)
     reset(mockDice)
+    when(mockDice.maxValue).thenReturn(6)
   }
 
   feature("Determining play order") {
@@ -21,30 +22,53 @@ class MultiplePlayersSpec extends FeatureSpec with GivenWhenThen with Matchers w
 
     scenario("1") {
       Given("there are two players")
+      val p1 = game.addPlayer("player1")
+      val p2 = game.addPlayer("player2")
+
       When("the game is started")
+
       Then("the players must roll dice to determine their play order")
-      pending
+      a[GameStateException] shouldBe thrownBy { game.move(p1) }
+      a[GameStateException] shouldBe thrownBy { game.move(p2) }
     }
 
     scenario("2") {
       Given("the players are rolling to determine play order")
+      val p1 = game.addPlayer("player1")
+      val p2 = game.addPlayer("player2")
+
       When("Player 1 rolls higher than Player 2")
+      when(mockDice.roll()).thenReturn(5, 4)
+      game.rollForStartOrder()
+
       Then("Player 1 rolls first")
-      pending
+      game.nextToPlay shouldBe Some(p1)
     }
 
     scenario("3") {
       Given("the players are rolling to determine play order")
+      val p1 = game.addPlayer("player1")
+      val p2 = game.addPlayer("player2")
+
       When("Player 2 rolls higher than Player 1")
+      when(mockDice.roll()).thenReturn(2, 4)
+      game.rollForStartOrder()
+
       Then("Player 2 rolls first")
-      pending
+      game.nextToPlay shouldBe Some(p2)
     }
 
     scenario("4") {
       Given("the players are rolling to determine play order")
+      val p1 = game.addPlayer("player1")
+      val p2 = game.addPlayer("player2")
+
       When("Player 1 rolls the same as Player 2")
       Then("the players must roll again")
-      pending
+      when(mockDice.roll()).thenReturn(2, 2, 4, 3)
+      game.rollForStartOrder()
+
+      game.nextToPlay shouldBe Some(p1)
     }
   }
 
@@ -57,6 +81,8 @@ class MultiplePlayersSpec extends FeatureSpec with GivenWhenThen with Matchers w
       Given("it is Player 1's turn")
       val p1 = game.addPlayer("player1")
       val p2 = game.addPlayer("player2")
+      when(mockDice.roll()).thenReturn(5, 4)
+      game.rollForStartOrder()
       game.nextToPlay shouldBe Some(p1)
 
       When("they have moved their token")
@@ -70,7 +96,8 @@ class MultiplePlayersSpec extends FeatureSpec with GivenWhenThen with Matchers w
       Given("it is Player 2's turn")
       val p1 = game.addPlayer("player1")
       val p2 = game.addPlayer("player2")
-      game.move(p1)
+      when(mockDice.roll()).thenReturn(4, 5)
+      game.rollForStartOrder()
       game.nextToPlay shouldBe Some(p2)
 
       When("they have moved their token")
@@ -84,7 +111,8 @@ class MultiplePlayersSpec extends FeatureSpec with GivenWhenThen with Matchers w
       Given("it is Player 2's turn")
       val p1 = game.addPlayer("player1")
       val p2 = game.addPlayer("player2")
-      game.move(p1)
+      when(mockDice.roll()).thenReturn(4, 5)
+      game.rollForStartOrder()
       game.nextToPlay shouldBe Some(p2)
 
       When("player 1 attempts to move their token")

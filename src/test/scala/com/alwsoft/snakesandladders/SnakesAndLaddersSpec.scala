@@ -25,6 +25,8 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen with Matchers 
 
       When("the token lands on square 12")
       val token1 = game.addPlayer("Player1")
+      when(mockDice.roll()).thenReturn(4)
+      game.rollForStartOrder()
       when(mockDice.roll()).thenReturn(11)
       game.move(token1)
 
@@ -38,6 +40,8 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen with Matchers 
 
       When("the token lands on square 2")
       val token1 = game.addPlayer("Player1")
+      when(mockDice.roll()).thenReturn(4)
+      game.rollForStartOrder()
       when(mockDice.roll()).thenReturn(1)
       game.move(token1)
 
@@ -57,6 +61,8 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen with Matchers 
 
       When("the token lands on square 2")
       val token1 = game.addPlayer("Player1")
+      when(mockDice.roll()).thenReturn(4)
+      game.rollForStartOrder()
       when(mockDice.roll()).thenReturn(1)
       game.move(token1)
 
@@ -70,6 +76,8 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen with Matchers 
 
       When("the token lands on square 12")
       val token1 = game.addPlayer("Player1")
+      when(mockDice.roll()).thenReturn(4)
+      game.rollForStartOrder()
       when(mockDice.roll()).thenReturn(11)
       game.move(token1)
 

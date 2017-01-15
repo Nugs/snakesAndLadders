@@ -5,7 +5,7 @@ import scala.util.Random
 case class BoardFixtureException(message: String) extends RuntimeException(message)
 case class GameStateException(message: String) extends RuntimeException(message)
 
-case class Token(playerName: String, var moveCount: Int = 0)
+case class Token(playerName: String, var moveCount: Int = 0, var startOrder: Option[Int] = None)
 
 case class Dice(maxValue: Int) {
   def roll():Int = Random.nextInt(maxValue) + 1
@@ -17,6 +17,7 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
   private var tokenLocation: Map[Token, Int] = Map()
   private var fixtures: Map[Int, Int] = Map()
   private def playerOnWinningSquare: ((Token, Int)) => Boolean = entry => entry._2 == boardSize
+  private def startedOnly: Token => Boolean = t => t.startOrder.isDefined
 
   private def addFixture(fixture: (Int, Int)): Unit = {
     if(gameIsStarted)
@@ -27,7 +28,7 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
       fixtures += fixture
   }
 
-  def nextToPlay: Option[Token] = players.sortBy(t => t.moveCount).headOption
+  def nextToPlay: Option[Token] = players.filter(startedOnly).sortBy(t => (t.moveCount, t.startOrder)).headOption
 
   def gameIsStarted: Boolean = tokenLocation.nonEmpty
 
@@ -58,6 +59,22 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
       }
     }
     token.moveCount += 1
+  }
+
+  def rollForStartOrder(tokens: Seq[Token] = players): Seq[Token] = {
+    tokens.partition(t => t.startOrder.isEmpty) match {
+      case (Seq(), done) => done
+      case (toBeAllocated, done) =>
+        toBeAllocated.foreach { p =>
+          val startOrder = Some(dice.maxValue + 1 - dice.roll())
+          toBeAllocated.filter(tba => tba.startOrder.isDefined).filter(q => q.startOrder == startOrder) match {
+            case Seq() => p.startOrder = startOrder
+            case likeRolls => likeRolls.foreach { r => r.startOrder = None }
+          }
+        }
+
+        done ++ rollForStartOrder(toBeAllocated)
+    }
   }
 
   def addPlayer(name: String): Token = {

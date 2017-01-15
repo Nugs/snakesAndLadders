@@ -23,6 +23,7 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers w
       Given("the game is started")
       When("the token is placed on the board")
       val token1 = game.addPlayer("Player1")
+      game.rollForStartOrder()
 
       Then("the token is on square 1")
       game.location(token1) shouldBe 1
@@ -31,6 +32,7 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers w
     scenario("2") {
       Given("the token is on square 1")
       val token1 = game.addPlayer("Player1")
+      game.rollForStartOrder()
       game.location(token1) shouldBe 1
 
       When("the token is moved 3 spaces")
@@ -44,6 +46,7 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers w
     scenario("3") {
       Given("the token is on square 1")
       val token1 = game.addPlayer("Player1")
+      game.rollForStartOrder()
       game.location(token1) shouldBe 1
 
       When("the token is moved 3 spaces")
@@ -78,6 +81,8 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers w
     
     scenario("2") {
       val token1 = game.addPlayer("Player1")
+      when(mockDice.roll()).thenReturn(4)
+      game.rollForStartOrder()
 
       Given("the player rolls a 4")
       when(mockDice.roll()) thenReturn 4
@@ -98,6 +103,8 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers w
     scenario("1") {
       Given("the token is on square 97")
       val token1 = game.addPlayer("Player1")
+      when(mockDice.roll()).thenReturn(4)
+      game.rollForStartOrder()
       when(mockDice.roll()).thenReturn(96)
       game.move(token1)
       game.location(token1) shouldBe 97
@@ -116,6 +123,8 @@ class MovingYourTokenSpec extends FeatureSpec with GivenWhenThen with Matchers w
     scenario("2") {
       Given("the token is on square 97")
       val token1 = game.addPlayer("Player1")
+      when(mockDice.roll()).thenReturn(4)
+      game.rollForStartOrder()
       when(mockDice.roll()).thenReturn(96)
       game.move(token1)
       game.location(token1) shouldBe 97
