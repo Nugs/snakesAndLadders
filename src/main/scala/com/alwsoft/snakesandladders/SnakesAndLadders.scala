@@ -28,24 +28,58 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
       fixtures += fixture
   }
 
+  /**
+    * Who is the next player to have a turn.
+    * Optional - if no playrs have yet been added to the game and/or the initial roll for play order has not been done.
+    * @return
+    */
   def nextToPlay: Option[Token] = players.filter(startedOnly).sortBy(t => (t.moveCount, t.startOrder)).headOption
 
+  /**
+    * Is the game started - have tokens been added to the board.
+    * @return Boolean
+    */
   def gameIsStarted: Boolean = tokenLocation.nonEmpty
 
+  /**
+    * Add a ladder to the board.
+    * Throws a BoardFixtureException if the ladder would be invalid.
+    * @param ladder
+    */
   def addLadder(ladder: (Int, Int)):Unit = {
     if(ladder._1 > ladder._2) throw BoardFixtureException("Ladders must go down")
     addFixture(ladder)
   }
 
+  /**
+    * Add a snake to the board.
+    * Throws a BoardFixtureException if the snake would be invalid.
+    * @param snake
+    */
   def addSnake(snake: (Int, Int)): Unit = {
     if(snake._1 < snake._2) throw BoardFixtureException("Snakes must go down")
     addFixture(snake)
   }
 
+  /**
+    * Return an Option wrappng the winner (if the game is concluded) or None if not.
+    * @return
+    */
   def winner(): Option[Token] = tokenLocation.find(playerOnWinningSquare).map(_._1)
 
+  /**
+    * Return the location on the board of the given token.
+    *
+    * @param token
+    * @return
+    */
   def location(token: Token): Int = tokenLocation.getOrElse(token, -1)
 
+  /**
+    * Move the given token on the board (a dice roll will be made to determine the number of squares).
+    * Throws GameStateException if the player passed is not the next to move.
+    * @param token The player to move
+    */
   def move(token: Token): Unit = {
     if(Option(token) != nextToPlay) throw GameStateException(s"Please wait for your turn (next up is $nextToPlay)")
 
@@ -61,6 +95,11 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
     token.moveCount += 1
   }
 
+  /**
+    * Initiate the roll for play order. Each player will have their order of play established.
+    * @param tokens
+    * @return
+    */
   def rollForStartOrder(tokens: Seq[Token] = players): Seq[Token] = {
     tokens.partition(t => t.startOrder.isEmpty) match {
       case (Seq(), done) => done
@@ -77,6 +116,11 @@ case class SnakesAndLadders(dice: Dice = Dice(6), boardSize: Int = 100) {
     }
   }
 
+  /**
+    * Add a player to the game
+    * @param name Name of the player
+    * @return
+    */
   def addPlayer(name: String): Token = {
     val newPlayer = Token(name)
     tokenLocation += (newPlayer -> 1)
