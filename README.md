@@ -7,6 +7,13 @@ Build
 The application is built using SBT (0.13) and Scala (2.12)
 The only library dependencies are ScalaTest (3.0.1) and Mockito (2.6.2)
 
+Run
+---
+The applicaion has no 'runnable' frontend - testing of the public facing API has been done
+using scalaTest. The test suite can be run via sbt: `sbt test` or via IDE integrations.
+A travis build has been configured (linked above) to illustrate the result of running the test
+suite.
+
 Testing
 -------
 
