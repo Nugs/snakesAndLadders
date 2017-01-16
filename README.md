@@ -53,6 +53,7 @@ Things that could be better
 ---------------------------
 * 'rollForStartOrder' could probably do with some enhancement and possibly benefit from more
 clarity on what 'reroll on same value' means in terms of players who didn't 'tie' - where do
+they sit in the overall turn list?
 * Boundary conditions - a snake or ladder could be defined beyond the bounds of the board for example
 * Don't like the use of vars - would like to have constructed the Game with a full set of snakes/ladders
 from the oustset and have fixtures as a val
