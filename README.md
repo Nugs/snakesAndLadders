@@ -1,5 +1,5 @@
-Snakes & Ladders
-================
+Snakes & Ladders [![Build Status](https://travis-ci.org/Nugs/snakesAndLadders.svg?branch=master)](https://travis-ci.org/Nugs/snakesAndLadders)
+================================================================================================
 
 Build
 -----
